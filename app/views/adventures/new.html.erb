@@ -77,7 +77,7 @@
           <%= f.label :required_time, "冒険時間", class: "block text-xs text-slate-400 mb-1" %>
           <%= f.select :required_time,
                 Adventure::DURATIONS,
-                { prompt: "※現在、どの時間を選んでも獲得ゴールドは一律です" },
+                { prompt: "※現在、冒険時間による報酬ボーナスはありません" },
                 { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
         </div>
 
