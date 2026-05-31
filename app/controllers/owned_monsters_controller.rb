@@ -1,6 +1,8 @@
 class OwnedMonstersController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   before_action :set_owned_monster, only: %i[ show destroy levelup ]
   before_action :ensure_not_locked, only: %i[ destroy levelup ]
+
 
   def index
     @owned_monsters = current_user.owned_monsters.includes(:monster)
@@ -33,7 +35,8 @@ class OwnedMonstersController < ApplicationController
     if @owned_monster.destroy
       redirect_to owned_monsters_path, notice: "モンスターを解雇しました", status: :see_other
     else
-      redirect_to owned_monster_path(@owned_monster), alert: @owned_monster.errors.full_messages.to_sentence
+      # before_destroy で弾かれた場合の処理
+      redirect_to owned_monster_path(@owned_monster), alert: @owned_monster.errors.full_messages.to_sentence, status: :see_other
     end
   end
 
@@ -67,5 +70,9 @@ class OwnedMonstersController < ApplicationController
   def ensure_not_locked
     return unless @owned_monster.locked_for_adventure?
     redirect_to owned_monster_path(@owned_monster), alert: "冒険中のモンスターは操作できません"
+  end
+
+  def handle_not_found
+    redirect_to owned_monsters_path, alert: "指定されたモンスターは見つかりませんでした", status: :see_other
   end
 end

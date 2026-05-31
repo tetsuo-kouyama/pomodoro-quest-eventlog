@@ -122,6 +122,7 @@ RSpec.describe 'OwnedMonsters', type: :request do
     context 'モンスターが1体のみ' do
       it 'モンスターを削除できない' do
         expect do
+          
           delete owned_monster_path(owned_monster)
         end.not_to change(OwnedMonster, :count)
         expect(response).to redirect_to(owned_monster_path(owned_monster))
