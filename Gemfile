@@ -36,28 +36,25 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
-  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
-  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false
 
-  gem "rspec-rails" # テスト全体のフレームワーク
-  gem "factory_bot_rails" # テスト用データの作成自動化
+  gem "rspec-rails"        # テスト全体のフレームワーク
+  gem "factory_bot_rails"  # テスト用データの作成自動化
 end
 
 group :development do
-  # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem "better_errors" # デフォルトのエラー画面を整形
-  gem "binding_of_caller" # better_errors の拡張機能を有効にする
+  gem "better_errors"      # デフォルトのエラー画面を整形
+  gem "binding_of_caller"  # better_errors の拡張機能を有効にする
 end
 
 group :test do
-  gem "capybara" # ブラウザ操作をプログラムでシミュレート
-  gem "selenium-webdriver" # 実際のブラウザを裏側で自動操縦
+  gem "capybara"                  # ブラウザ操作をプログラムでシミュレート
+  gem "selenium-webdriver"        # 実際のブラウザを裏側で自動操縦
+  gem "simplecov", require: false # コードカバレッジを計測
 end
