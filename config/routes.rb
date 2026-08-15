@@ -9,9 +9,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :adventures, only: %i[ index new create ] do
+  resources :adventures, only: %i[ index new create show ] do
+    resources :adventure_events, only: :index
     member do
       patch :claim
+      get :events
     end
   end
 

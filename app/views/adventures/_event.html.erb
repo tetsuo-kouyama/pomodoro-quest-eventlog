@@ -1,0 +1,42 @@
+<details id="<%= dom_id(event) %>" data-event-id="<%= event.id %>">
+  <summary class="cursor-pointer">
+    <span class="text-xs text-slate-400">
+      <%= event.occurred_after_seconds / 60 %>分
+    </span>
+
+    <% case event.event_type %>
+    <% when "battle" %>
+      <span>敵と遭遇</span>
+    <% when "boss" %>
+      <span>ボスと遭遇</span>
+    <% when "heal" %>
+      <span>泉を見つけた</span>
+    <% when "treasure" %>
+      <span>宝箱を見つけた</span>
+    <% end %>
+  </summary>
+
+  <div class="mt-2 pl-4">
+    <% case event.event_type %>
+    <% when "battle", "boss" %>
+      <% color_map = {
+        "ally" => "text-blue-500",
+        "enemy" => "text-red-500",
+        "system" => "text-slate-500"
+      } %>
+
+      <% event.payload["logs"].each do |log| %>
+        <p class="<%= color_map.fetch(log["actor_type"], "text-slate-800") %>">
+          <%= log["message"] %>
+        </p>
+      <% end %>
+
+    <% when "heal" %>
+      <p class="whitespace-pre-line"><%= event.payload["message"] %></p>
+
+    <% when "treasure" %>
+      <p><%= event.payload["gold"] %>G を獲得した！</p>
+    <% end %>
+  </div>
+</details>
+

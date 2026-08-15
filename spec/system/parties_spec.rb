@@ -64,27 +64,31 @@ RSpec.describe 'Parties', type: :system do
 
     describe 'パーティ編集制御' do
       context 'すでに冒険している' do
+        let!(:adventure) { create(:adventure, :ongoing, user: user) }
+
         it 'パーティを変更できない' do
-          create(:adventure, :ongoing, user: user)
           visit edit_party_path
 
-          expect(page).to have_current_path(new_adventure_path)
-          expect(page).to have_content('冒険中はパーティを変更できません')
+          expect(page).to have_current_path(adventure_path(adventure))
+          expect(page).to have_content('進行中または報酬を受け取っていない冒険があります')
         end
       end
 
       context '報酬受け取り前' do
+        let!(:adventure) { create(:adventure, :victory, user: user, reward_claimed_at: nil) }
+
         it 'パーティを変更できない' do
-          create(:adventure, :finished, user: user)
           visit edit_party_path
 
-          expect(page).to have_current_path(new_adventure_path)
+          expect(page).to have_current_path(adventure_path(adventure))
+          expect(page).to have_content('進行中または報酬を受け取っていない冒険があります')
         end
       end
 
       context '報酬受け取り後' do
+        let!(:adventure) { create(:adventure, :victory, :reward_claimed, user: user) }
+
         it 'パーティを変更できる' do
-          create(:adventure, :claimed, user: user)
           visit edit_party_path
 
           expect(page).to have_current_path(edit_party_path)

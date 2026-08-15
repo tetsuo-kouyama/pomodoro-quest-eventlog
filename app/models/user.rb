@@ -25,7 +25,16 @@ class User < ApplicationRecord
     end
   end
 
-  def adventuring?
-    adventures.unclaimed.exists?
+  # 冒険中または報酬未取得の冒険が存在するか？
+  def incomplete_adventure?
+    adventures.incomplete.exists?
+  end
+
+  # 進行中の冒険オブジェクトを取得
+  def incomplete_adventure
+    return @incomplete_adventure if defined?(@incomplete_adventure)
+
+    @incomplete_adventure =
+      adventures.incomplete.order(start_at: :desc).first
   end
 end

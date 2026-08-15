@@ -1,11 +1,25 @@
 <div class="bg-white p-4 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] flex justify-between items-center font-black text-slate-800">
 
-  <%# ダンジョン名と出発時刻 %>
+  <%# 左側：ダンジョン名、ログアイコン、出発時刻 %>
   <div class="space-y-1">
-    <div class="text-sm flex items-center gap-2">
-      <span class="text-xs px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-500">Lv.<%= adventure.dungeon.difficulty %></span>
+    <div class="text-sm flex items-center gap-1.5">
+      <span class="text-xs px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-500">
+        Lv.<%= adventure.dungeon.difficulty %>
+      </span>
+      
       <span><%= adventure.dungeon.name %></span>
+
+      <%# ログ参照アイコンボタン（ダンジョン名のすぐ右に配置） %>
+      <% unless adventure.ongoing? || adventure.reward_claimable? %>
+        <%= link_to adventure_adventure_events_path(adventure),
+                    data: { turbo_frame: "adventure_event_modal" },
+                    class: "p-1 hover:bg-slate-100 rounded transition-colors border border-transparent hover:border-slate-200 leading-none",
+                    aria: { label: "冒険ログを見る" } do %>
+          📜
+        <% end %>
+      <% end %>
     </div>
+
     <%# 日付のフォーマット %>
     <div class="text-[10px] text-slate-400">
       <p>出発: <%= format_adventure_time(adventure.start_at) %></p>
@@ -13,26 +27,26 @@
     </div>
   </div>
 
-  <%# ステータスに応じた結果と報酬の表示 %>
+  <%# 右側：ステータスと報酬表示 %>
   <div class="text-right space-y-1">
     <% if adventure.ongoing? %>
       <%# 進行中の場合 %>
       <span class="text-xs text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 animate-pulse">遠征中</span>
       <div class="text-xs text-slate-400">帰還予定: <%= format_adventure_clock(adventure.end_at) %></div>
 
-    <% elsif adventure.finished? %>
+    <% elsif adventure.reward_claimable? %>
       <%# 完了・未受け取りの場合 %>
       <span class="text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">帰還完了</span>
-      <div class="text-xs text-fuchsia-500 underline"><%= link_to "報酬を受け取る", new_adventure_path %></div>
+      <div class="text-xs text-fuchsia-500 underline"><%= link_to "報酬を受け取る", adventure_path(adventure) %></div>
 
     <% else %>
-      <%# 受け取り済み（claimed）＝ 過去の確定した履歴 %>
-      <% if adventure.combat_victory? %>
+      <%# 受け取り済みの場合 %>
+      <% if adventure.victory? %>
         <span class="text-xs text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">勝利</span>
-      <% else %>
+      <% elsif adventure.wiped_out? %>
         <span class="text-xs text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">敗北</span>
       <% end %>
-      <div class="text-sm text-amber-500">+<%= adventure.reward_gold %>G</div>
+      <div class="text-sm text-amber-500">+<%= adventure.final_reward_gold %>G</div>
     <% end %>
   </div>
 

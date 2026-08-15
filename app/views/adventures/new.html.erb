@@ -3,91 +3,61 @@
 <%= render "shared/upper_navigation" %>
 
 <div class="p-5 space-y-6">
-  <% if @current_adventure %>
-    <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] text-center font-black text-slate-800 space-y-4">
-      <h2 class="text-lg text-fuchsia-500">
-        <%= @current_adventure.ongoing? ? "冒険進行中" : "帰還完了" %>
-      </h2>
-      <p class="text-sm">ダンジョン: <%= @dungeon.name %></p>
+  <!-- パーティ確認エリア -->
+  <%= link_to edit_party_path, class: "block no-underline" do %>
+    <div class="bg-white p-4 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] hover:bg-slate-50 transition-all">
 
-      <% if @current_adventure.ongoing? %>
-        <%# JavaScriptでカウントダウン %>
-        <p class="text-xs text-slate-400">帰還予定時刻</p>
-        <div data-controller="adventure-timer"
-             data-adventure-timer-end-time-value="<%= @current_adventure.end_at.to_f * 1000 %>"
-        >
-          <p data-adventure-timer-target="time"
-             class="text-2xl border-2 border-slate-800 p-3 bg-slate-50 rounded-lg font-black tracking-wider text-slate-700 text-center"
-          >
-            00:00
-          </p>
-        </div>
-      <% else %>
-        <%= button_to "報酬を受け取る！", claim_adventure_path(@current_adventure), method: :patch, class: "w-full py-3 bg-amber-400 text-slate-800 rounded-xl border-2 border-slate-800 font-black shadow-md" %>
-      <% end %>
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-xs font-black text-slate-400">現在のパーティ</span>
+        <span class="text-xs font-black text-fuchsia-500 bg-fuchsia-50 px-2 py-0.5 rounded border border-fuchsia-200">編成する →</span>
+      </div>
+
+      <div class="flex justify-between items-baseline border-t border-dashed border-slate-200 pt-2 mt-2">
+        <span class="text-xs font-black text-slate-700">パーティ総合力</span>
+        <span class="text-xl font-black text-slate-800">
+          <%= total_party_power(@active_monsters) %>
+        </span>
+      </div>
+
+      <div class="space-y-1.5 pl-1">
+        <% (1..OwnedMonster::MAX_PARTY_SIZE).each do |i| %>
+          <% active_monster = monster_in_slot(@active_monsters, i) %>
+          <div class="flex items-center gap-3 font-black text-xs text-slate-700">
+            <span class="text-slate-400 text-[10px] bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 w-5 text-center"><%= i %></span>
+            <span><%= active_monster&.nickname || "（空きスロット）" %></span>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  <% end %>
+
+
+  <!-- フォームエリア -->
+  <%= form_with model: @adventure, id: "adventure-form" do |f| %>
+    <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] space-y-4 font-black text-slate-800">
+      <!-- ダンジョン選択 -->
+      <div>
+        <%= f.label :dungeon_id, "ダンジョン", class: "block text-xs text-slate-400 mb-1" %>
+        <%= f.collection_select :dungeon_id, @dungeons, :id, ->(d) { "#{d.name} (敵の強さ: #{d.enemy_power})" },
+            { prompt: "ダンジョンを選択してください" },
+            { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
+      </div>
+
+      <!-- 冒険時間選択 -->
+      <div>
+        <%= f.label :required_time, "冒険時間", class: "block text-xs text-slate-400 mb-1" %>
+        <%= f.select :required_time,
+              Adventure::DURATIONS,
+              { prompt: "※現在、冒険時間による報酬ボーナスはありません" },
+              { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
+      </div>
     </div>
 
-  <% else %>
+    <!-- 冒険するボタン -->
+    <div class="text-center pt-4">
+      <%= f.submit "冒険する", class: "w-full py-4 bg-fuchsia-300 text-slate-800 font-black rounded-xl border-2 border-slate-800 border-b-4 shadow-md active:translate-y-0.5 active:border-b-2 active:shadow-sm transition-all cursor-pointer" %>
+    </div>
 
-    <%# --- パーティ確認エリア --- %>
-    <%= link_to edit_party_path, class: "block no-underline" do %>
-      <div class="bg-white p-4 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] hover:bg-slate-50 transition-all">
-
-        <div class="flex justify-between items-center mb-3">
-          <span class="text-xs font-black text-slate-400">現在のパーティ</span>
-          <span class="text-xs font-black text-fuchsia-500 bg-fuchsia-50 px-2 py-0.5 rounded border border-fuchsia-200">編成する →</span>
-        </div>
-
-        <div class="flex justify-between items-baseline border-t border-dashed border-slate-200 pt-2 mt-2">
-          <span class="text-xs font-black text-slate-700">パーティ総合力</span>
-          <span class="text-xl font-black text-slate-800">
-            <%= total_party_power(@active_monsters) %>
-          </span>
-        </div>
-
-        <div class="space-y-1.5 pl-1">
-          <% (1..OwnedMonster::MAX_PARTY_SIZE).each do |i| %>
-            <% active_monster = monster_in_slot(@active_monsters, i) %>
-            <div class="flex items-center gap-3 font-black text-xs text-slate-700">
-              <span class="text-slate-400 text-[10px] bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 w-5 text-center"><%= i %></span>
-              <span><%= active_monster&.nickname || "（空きスロット）" %></span>
-            </div>
-          <% end %>
-        </div>
-
-      </div>
-    <% end %>
-
-
-    <%# --- フォームエリア --- %>
-    <%= form_with model: @adventure, id: "adventure-form" do |f| %>
-
-      <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] space-y-4 font-black text-slate-800">
-
-        <%# ダンジョン選択 %>
-        <div>
-          <%= f.label :dungeon_id, "ダンジョン", class: "block text-xs text-slate-400 mb-1" %>
-          <%= f.collection_select :dungeon_id, @dungeons, :id, ->(d) { "#{d.name} (敵の強さ: #{d.enemy_power})" },
-                { prompt: "ダンジョンを選択してください" },
-                { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
-        </div>
-
-        <%# 冒険時間選択 %>
-        <div>
-          <%= f.label :required_time, "冒険時間", class: "block text-xs text-slate-400 mb-1" %>
-          <%= f.select :required_time,
-                Adventure::DURATIONS,
-                { prompt: "※現在、冒険時間による報酬ボーナスはありません" },
-                { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
-        </div>
-
-      </div>
-
-      <%# 冒険するボタン %>
-      <div class="text-center pt-4">
-        <%= f.submit "冒険する", class: "w-full py-4 bg-fuchsia-300 text-slate-800 font-black rounded-xl border-2 border-slate-800 border-b-4 shadow-md active:translate-y-0.5 active:border-b-2 active:shadow-sm transition-all cursor-pointer" %>
-      </div>
-
-    <% end %>
   <% end %>
 </div>

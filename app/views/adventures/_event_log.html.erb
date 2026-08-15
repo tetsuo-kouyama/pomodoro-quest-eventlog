@@ -1,0 +1,10 @@
+<% latest_id = adventure_events.first&.id || 0 %>
+
+
+<div id="adventure_events_list" 
+     data-list-event-id="<%= latest_id %>" 
+     class="space-y-2">
+  <% adventure_events.each do |event| %>
+    <%= render "adventures/event", event: event %>
+  <% end %>
+</div>

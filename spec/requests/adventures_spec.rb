@@ -77,9 +77,9 @@ RSpec.describe 'Adventures', type: :request do
     end
 
     context '既に冒険中の場合' do
-      it '新たに冒険できない' do
-        create(:adventure, :ongoing, :with_members, user: user)
+      let!(:adventure) { create(:adventure, :ongoing, :with_members, user: user) }
 
+      it '新たに冒険できない' do
         expect do
           post adventures_path,
             params: {
@@ -90,8 +90,8 @@ RSpec.describe 'Adventures', type: :request do
             }
         end.not_to change(Adventure, :count)
 
-        expect(response).to redirect_to(new_adventure_path)
-        expect(flash[:alert]).to eq("冒険中です")
+        expect(response).to redirect_to(adventure_path(adventure))
+        expect(flash[:alert]).to eq("進行中または報酬を受け取っていない冒険があります")
       end
     end
   end

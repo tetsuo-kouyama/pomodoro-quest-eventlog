@@ -3,7 +3,7 @@
 
     <% is_strategy = current_page?(new_adventure_path) || current_page?(edit_party_path) %>
 
-    <%= link_to new_adventure_path,
+    <%= link_to adventure_navigation_path(current_user),
         class: "flex items-center justify-center w-full h-full border-b-2 font-black text-sm transition-all #{is_strategy ? 'border-fuchsia-500 text-fuchsia-500' : 'border-transparent text-slate-500 hover:text-slate-800'}" do %>
       作戦
     <% end %>

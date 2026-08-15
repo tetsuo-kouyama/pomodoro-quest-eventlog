@@ -1,0 +1,7 @@
+<% @new_events.each do |event| %>
+  <%= turbo_stream.prepend(
+        "adventure_events_list",
+        partial: "adventures/event",
+        locals: { event: event } 
+      ) %>
+<% end %>

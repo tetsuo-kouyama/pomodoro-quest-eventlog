@@ -1,0 +1,40 @@
+<% content_for(:title, "冒険画面") %>
+
+<%= render "shared/upper_navigation" %>
+
+<div class="p-5 space-y-6">
+  <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] text-center font-black text-slate-800 space-y-4">
+    <h2 class="text-lg text-fuchsia-500">
+      <%= @adventure.ongoing? ? "冒険進行中" : "帰還完了" %>
+    </h2>
+    
+    <p class="text-sm">ダンジョン: <%= @dungeon.name %></p>
+
+    <% if @adventure.ongoing? %>
+      <%# JavaScriptでカウントダウン %>
+      <p class="text-xs text-slate-400">帰還予定時刻</p>
+      <div data-controller="adventure-timer"
+           data-adventure-timer-end-time-value="<%= @adventure.end_at.to_f * 1000 %>"
+           data-adventure-timer-refresh-url-value="<%= events_adventure_path(@adventure) %>"
+      >
+        <p data-adventure-timer-target="time"
+           class="text-2xl border-2 border-slate-800 p-3 bg-slate-50 rounded-lg font-black tracking-wider text-slate-700 text-center"
+        >
+          00:00
+        </p>
+      </div>
+    <% else %>
+      <%= button_to "報酬を受け取る！", 
+                    claim_adventure_path(@adventure),
+                    method: :patch, 
+                    class: "w-full py-3 bg-amber-400 text-slate-800 rounded-xl border-2 border-slate-800 font-black shadow-md" %>
+    <% end %>
+  </div>
+
+  <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] space-y-4">
+    <h3 class="text-base font-black text-slate-800">冒険ログ</h3>
+
+    <%= render "event_log", adventure_events: @adventure_events %>
+  </div>
+</div>
+

@@ -29,14 +29,14 @@ RSpec.describe Adventure, type: :model do
           adventure = build(:adventure, reward_gold: 1)
           expect(adventure).to be_valid
         end
+
+        it '値が0' do
+          adventure = build(:adventure, reward_gold: 0)
+          expect(adventure).to be_valid
+        end
       end
 
       context '無効の場合' do
-        it '値が0' do
-          adventure = build(:adventure, reward_gold: 0)
-          expect(adventure).to be_invalid
-        end
-
         it '値が負数' do
           adventure = build(:adventure, reward_gold: -1)
           expect(adventure).to be_invalid

@@ -1,0 +1,26 @@
+<%# app/views/adventure_events/index.html.erb %>
+
+<%= turbo_frame_tag "adventure_event_modal" do %>
+  <!-- モーダルの背景（オーバーレイ） -->
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    
+    <!-- モーダル本体 -->
+    <div class="bg-white rounded-xl border-2 border-slate-800 p-5 max-w-lg w-full max-h-[80vh] flex flex-col shadow-[4px_4px_0_rgba(15,23,42,1)] relative space-y-4">
+      
+      <!-- 閉じるボタン（画面全体を再読み込みして閉じる、または空フレームに差し替える） -->
+      <%= link_to "✕", adventures_path, data: { turbo_frame: "_top" }, class: "absolute top-4 right-4 text-slate-400 hover:text-slate-800 font-bold" %>
+
+      <h2 class="text-base font-black text-slate-800 border-b-2 border-slate-100 pb-2">
+        冒険ログ（<%= @adventure.created_at.strftime("%Y/%m/%d %H:%M") %>）
+      </h2>
+
+      <!-- イベントログ一覧（スクロール可能エリア） -->
+      <div class="overflow-y-auto space-y-2 pr-1">
+        <% @adventure_events.each do |event| %>
+          <%= render "adventures/event", event: event %>
+        <% end %>
+      </div>
+      
+    </div>
+  </div>
+<% end %>

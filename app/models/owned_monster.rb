@@ -1,4 +1,6 @@
 class OwnedMonster < ApplicationRecord
+  include StatCalculatable
+
   MAX_PARTY_SIZE = 5
   MAX_LEVEL = 10
   MAX_MONSTER_COUNT = 10
@@ -21,15 +23,19 @@ class OwnedMonster < ApplicationRecord
   scope :inactive, -> { where(active: false) }
 
   def hp
-    monster.base_hp + (level - 1) * hp_growth
+    calculate_stat(monster.base_hp, level, hp_growth)
   end
 
   def attack
-    monster.base_atk + (level - 1) * atk_growth
+    calculate_stat(monster.base_atk, level, atk_growth)
   end
 
   def defense
-    monster.base_def + (level - 1) * def_growth
+    calculate_stat(monster.base_def, level, def_growth)
+  end
+
+  def speed
+    calculate_stat(monster.base_speed, level, spd_growth)
   end
 
   def total_power
@@ -50,7 +56,7 @@ class OwnedMonster < ApplicationRecord
   end
 
   def locked_for_adventure?
-    user.adventuring? && active?
+    user.incomplete_adventure? && active?
   end
 
   def only_monster?
@@ -77,6 +83,10 @@ class OwnedMonster < ApplicationRecord
 
   def def_growth
     5
+  end
+
+  def spd_growth
+    3
   end
 
   def ensure_not_last_monster

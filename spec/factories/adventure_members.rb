@@ -4,5 +4,7 @@ FactoryBot.define do
     association :adventure
 
     sequence(:slot) { |n| n }
+    max_hp { 10 }
+    current_hp { 10 }
   end
 end

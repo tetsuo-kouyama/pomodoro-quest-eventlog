@@ -1,5 +1,5 @@
 class PartiesController < ApplicationController
-  before_action :ensure_not_adventuring, only: %i[ edit add_monster remove_monster ]
+  before_action :ensure_no_incomplete_adventure, only: %i[ edit add_monster remove_monster ]
   before_action :load_party_data, only: %i[ edit add_monster remove_monster]
   before_action :set_owned_monster, only: %i[ add_monster remove_monster ]
 
@@ -39,8 +39,9 @@ class PartiesController < ApplicationController
     @owned_monster = current_user.owned_monsters.find(params[:owned_monster_id])
   end
 
-  def ensure_not_adventuring
-    return unless current_user.adventuring?
+  # 未完了の冒険がないことを確認する
+  def ensure_no_incomplete_adventure
+    return unless current_user.incomplete_adventure?
     redirect_to new_adventure_path, alert: "冒険中はパーティを変更できません"
   end
 end

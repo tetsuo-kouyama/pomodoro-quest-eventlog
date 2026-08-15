@@ -1,0 +1,2 @@
+module AdventureEventsHelper
+end

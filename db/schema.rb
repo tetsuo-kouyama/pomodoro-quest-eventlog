@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_09_153433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "adventure_events", force: :cascade do |t|
+    t.bigint "adventure_id", null: false
+    t.integer "occurred_after_seconds", null: false
+    t.integer "event_index", null: false
+    t.string "event_type", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["adventure_id", "event_index"], name: "index_adventure_events_on_adventure_id_and_event_index", unique: true
+    t.index ["adventure_id", "occurred_after_seconds"], name: "idx_on_adventure_id_occurred_after_seconds_5527aabe10"
+    t.index ["adventure_id"], name: "index_adventure_events_on_adventure_id"
+  end
 
   create_table "adventure_members", force: :cascade do |t|
     t.bigint "owned_monster_id", null: false
@@ -20,6 +33,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
     t.integer "slot", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "current_hp", null: false
+    t.integer "max_hp", null: false
     t.index ["adventure_id", "owned_monster_id"], name: "index_adventure_members_on_adventure_id_and_owned_monster_id", unique: true
     t.index ["adventure_id"], name: "index_adventure_members_on_adventure_id"
     t.index ["owned_monster_id"], name: "index_adventure_members_on_owned_monster_id"
@@ -35,8 +50,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "required_time", null: false, comment: "seconds"
+    t.bigint "random_seed", null: false
+    t.integer "next_event_index", default: 1, null: false
+    t.datetime "reward_claimed_at"
     t.index ["dungeon_id"], name: "index_adventures_on_dungeon_id"
     t.index ["user_id"], name: "index_adventures_on_user_id"
+  end
+
+  create_table "dungeon_enemies", force: :cascade do |t|
+    t.bigint "dungeon_id", null: false
+    t.bigint "monster_id", null: false
+    t.integer "level", null: false
+    t.integer "encounter_weight", null: false
+    t.integer "gold_reward", null: false
+    t.integer "enemy_count", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dungeon_id", "monster_id", "level", "enemy_count"], name: "idx_on_dungeon_id_monster_id_level_enemy_count_1fab9f8f9e", unique: true
+    t.index ["dungeon_id"], name: "index_dungeon_enemies_on_dungeon_id"
+    t.index ["monster_id"], name: "index_dungeon_enemies_on_monster_id"
   end
 
   create_table "dungeons", force: :cascade do |t|
@@ -45,6 +77,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
     t.integer "reward_gold", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "battle_weight", default: 60, null: false
+    t.integer "heal_weight", default: 20, null: false
+    t.integer "treasure_weight", default: 20, null: false
   end
 
   create_table "monsters", force: :cascade do |t|
@@ -55,6 +90,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
     t.integer "hire_cost", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "base_speed", null: false
   end
 
   create_table "owned_monsters", force: :cascade do |t|
@@ -80,10 +116,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_055237) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "adventure_events", "adventures"
   add_foreign_key "adventure_members", "adventures"
   add_foreign_key "adventure_members", "owned_monsters"
   add_foreign_key "adventures", "dungeons"
   add_foreign_key "adventures", "users"
+  add_foreign_key "dungeon_enemies", "dungeons"
+  add_foreign_key "dungeon_enemies", "monsters"
   add_foreign_key "owned_monsters", "monsters"
   add_foreign_key "owned_monsters", "users"
 end

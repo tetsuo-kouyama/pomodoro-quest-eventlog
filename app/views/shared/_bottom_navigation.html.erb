@@ -10,7 +10,8 @@
     <div class="w-px h-8 bg-slate-200"></div>
 
     <% is_adventure = current_page?(new_adventure_path) %>
-    <%= link_to new_adventure_path, class: "flex flex-col items-center justify-center w-full h-full gap-1 #{is_adventure ? 'text-fuchsia-500' : 'text-slate-600 hover:text-slate-800'}" do %>
+    
+    <%= link_to adventure_navigation_path(current_user), class: "flex flex-col items-center justify-center w-full h-full gap-1 #{is_adventure ? 'text-fuchsia-500' : 'text-slate-600 hover:text-slate-800'}" do %>
       <span class="text-2xl">🗡️</span>
       <span class="text-xs font-black tracking-wider">冒険</span>
     <% end %>
