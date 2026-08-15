@@ -38,13 +38,17 @@ dungeons = [
     id: 1,
     name: 'スライムの洞窟',
     difficulty: 1,
-    reward_gold: 100
+    battle_weight: 6,
+    heal_weight: 2,
+    treasure_weight: 2
   },
   {
     id: 2,
     name: 'ゴブリンの森',
-    difficulty: 3,
-    reward_gold: 300
+    difficulty: 2,
+    battle_weight: 6,
+    heal_weight: 2,
+    treasure_weight: 2
   }
 ]
 

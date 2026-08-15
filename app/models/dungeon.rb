@@ -6,7 +6,6 @@ class Dungeon < ApplicationRecord
 
   validates :name, presence: true
   validates :difficulty, presence: true, numericality: { greater_than: 0 }
-  validates :reward_gold, presence: true, numericality: { greater_than: 0 }
   validates :battle_weight, :heal_weight, :treasure_weight, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :event_weights_must_have_positive_total
 
