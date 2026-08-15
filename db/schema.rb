@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_09_153433) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_15_080915) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "adventure_events", force: :cascade do |t|
     t.bigint "adventure_id", null: false
