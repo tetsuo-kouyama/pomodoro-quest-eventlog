@@ -152,6 +152,13 @@ class AdventureEventGenerator
     gold_reward = result[:victory] ? dungeon_enemy.gold_reward : 0
     adventure.reward_gold += gold_reward
 
+    if result[:victory]
+      result[:logs] << {
+        actor_type: "system",
+        message: "#{gold_reward}Gを獲得した！"
+      }
+    end
+
     # 5, 戦闘時点の情報を結果をイベントに保存
     # dungeon_enemy_id と monster_id は将来性を考慮して残しておく
     {
@@ -179,6 +186,12 @@ class AdventureEventGenerator
 
     gold_reward = result[:victory] ? dungeon_enemy.gold_reward : 0
     adventure.reward_gold += gold_reward
+    if result[:victory]
+      result[:logs] << {
+        actor_type: "system",
+        message: "#{gold_reward}Gを獲得した！"
+      }
+    end
 
     adventure.status = :victory if result[:victory]
 
@@ -196,7 +209,7 @@ class AdventureEventGenerator
 
   # 敵データから出現数が最も多いパターンをボスとして抽出
   def choose_boss_enemy
-    adventure.dungeon.dungeon_enemies.order(enemy_count: :desc).first
+    adventure.dungeon.dungeon_enemies.max_by(&:enemy_total_power)
   end
 
   # イベントの重みをハッシュにする
