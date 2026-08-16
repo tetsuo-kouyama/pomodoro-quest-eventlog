@@ -1,8 +1,22 @@
-<div id="inactive">
+<div id="inactive" class="space-y-2">
   <% inactive_monsters.each do |owned_monster| %>
-    <div class="bg-white p-4 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] flex justify-between items-center font-black text-sm text-slate-800">
-      <span><%= owned_monster.nickname %></span>
-      <%= link_to "入れる", add_monster_party_path(owned_monster_id: owned_monster.id), data: { turbo_method: :patch }, class: "text-xs bg-fuchsia-100 hover:bg-fuchsia-200 border-2 border-fuchsia-300 text-fuchsia-700 px-3 py-1 rounded-lg" %>
+    <div data-monster-id="<%= owned_monster.id %>" 
+         class="bg-white p-4 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] flex justify-between items-center font-black text-sm text-slate-800 gap-3">
+      
+      <!-- 1. ニックネーム領域（長い場合は ... 表示＋ツールチップ） -->
+      <div class="min-w-0 flex-1">
+        <span class="block truncate" title="<%= owned_monster.nickname %>">
+          <%= owned_monster.nickname %>
+        </span>
+      </div>
+
+      <!-- 2. ステータス・ボタン領域 -->
+      <div class="flex items-center gap-3 shrink-0">
+        <span>Lv.<%= owned_monster.level %></span>
+        <span>総合力：<%= owned_monster.total_power %></span>
+        <%= link_to "入れる", add_monster_party_path(owned_monster_id: owned_monster.id), data: { turbo_method: :patch }, class: "text-xs bg-fuchsia-100 hover:bg-fuchsia-200 border-2 border-fuchsia-300 text-fuchsia-700 px-3 py-1 rounded-lg" %>
+      </div>
+
     </div>
   <% end %>
 </div>

@@ -10,14 +10,13 @@ RSpec.describe 'Parties', type: :system do
 
   describe 'モンスター一覧' do
     it '昇順に並んでいる' do
-      create(:owned_monster, user: user, monster: monster, nickname: 'A')
-      create(:owned_monster, user: user, monster: monster, nickname: 'B')
-      create(:owned_monster, user: user, monster: monster, nickname: 'C')
+      monster1 = create(:owned_monster, user: user, monster: monster)
+      monster2 = create(:owned_monster, user: user, monster: monster)
+      monster3 = create(:owned_monster, user: user, monster: monster)
       visit edit_party_path
-      names = all('#inactive span')
-          .map(&:text)
+      ids = all('#inactive [data-monster-id]').map { |el| el['data-monster-id'].to_i }
 
-      expect(names).to eq(%w[A B C])
+      expect(ids).to eq([ monster1.id, monster2.id, monster3.id ])
     end
   end
 
