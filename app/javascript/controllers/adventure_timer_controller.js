@@ -85,6 +85,8 @@ export default class extends Controller {
       if (streamHtml.trim() !== "") {
         Turbo.renderStreamMessage(streamHtml)
 
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+
         const ids = Array.from(
           document.querySelectorAll(
             "#adventure_events_list > [data-event-id]"
