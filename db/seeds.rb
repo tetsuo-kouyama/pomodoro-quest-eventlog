@@ -38,6 +38,7 @@ dungeons = [
     id: 1,
     name: 'スライムの洞窟',
     difficulty: 1,
+    prerequisite_dungeon_id: nil,
     battle_weight: 6,
     heal_weight: 2,
     treasure_weight: 2
@@ -46,6 +47,7 @@ dungeons = [
     id: 2,
     name: 'ゴブリンの森',
     difficulty: 2,
+    prerequisite_dungeon_id: 1,
     battle_weight: 6,
     heal_weight: 2,
     treasure_weight: 2
