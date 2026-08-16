@@ -6,7 +6,7 @@ dungeons_data = [
   {
     name: 'スライムの洞窟',
     difficulty: 1,
-    prerequisite_name: nil, 
+    prerequisite_name: nil,
     battle_weight: 6, heal_weight: 2, treasure_weight: 2
   },
   {
@@ -44,7 +44,7 @@ monsters_data = [
   {
     name: 'ゴブリン',
     unlock_dungeon_name: 'ゴブリンの森',
-    base_hp: 25, base_atk: 7, base_def: 3, base_speed: 3, hire_cost: 100
+    base_hp: 35, base_atk: 17, base_def: 13, base_speed: 13, hire_cost: 200
   }
 ]
 
@@ -82,6 +82,26 @@ dungeon_enemies_data = [
     dungeon_name: 'スライムの洞窟',
     monster_name: 'スライム',
     level: 1, encounter_weight: 5, gold_reward: 30, enemy_count: 3
+  },
+  {
+    dungeon_name: 'ゴブリンの森',
+    monster_name: 'ゴブリン',
+    level: 1, encounter_weight: 39, gold_reward: 90, enemy_count: 3
+  },
+  {
+    dungeon_name: 'ゴブリンの森',
+    monster_name: 'スライム',
+    level: 3, encounter_weight: 30, gold_reward: 150, enemy_count: 5
+  },
+  {
+    dungeon_name: 'ゴブリンの森',
+    monster_name: 'ゴブリン',
+    level: 3, encounter_weight: 30, gold_reward: 180, enemy_count: 3
+  },
+  {
+    dungeon_name: 'ゴブリンの森',
+    monster_name: 'ゴブリン',
+    level: 5, encounter_weight: 1, gold_reward: 450, enemy_count: 3 
   }
 ]
 

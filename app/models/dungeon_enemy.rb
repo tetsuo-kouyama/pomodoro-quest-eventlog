@@ -30,4 +30,12 @@ class DungeonEnemy < ApplicationRecord
   def speed
     calculate_stat(monster.base_speed, level, SPD_GROWTH)
   end
+
+  def enemy_power
+    hp + attack + defense + speed
+  end
+
+  def enemy_total_power
+    enemy_power * enemy_count
+  end
 end

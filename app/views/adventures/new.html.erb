@@ -39,7 +39,7 @@
       <!-- ダンジョン選択 -->
       <div>
         <%= f.label :dungeon_id, "ダンジョン", class: "block text-xs text-slate-400 mb-1" %>
-        <%= f.collection_select :dungeon_id, @dungeons, :id, ->(d) { "#{d.name} (敵の強さ: #{d.enemy_power})" },
+        <%= f.collection_select :dungeon_id, @dungeons, :id, ->(d) { "#{d.name} (敵の強さ: #{d.enemy_total_power_range})" },
             { prompt: "ダンジョンを選択してください" },
             { required: true, class: "p-3 bg-slate-50 border-2 border-slate-800 rounded-lg text-sm w-full cursor-pointer" } %>
       </div>

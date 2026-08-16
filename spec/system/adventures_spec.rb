@@ -15,7 +15,7 @@ RSpec.describe 'Adventures', type: :system do
 
       it '冒険の作成に成功する' do
         visit new_adventure_path
-        select "#{dungeon.name} (敵の強さ: #{dungeon.enemy_power})", from: 'ダンジョン'
+        select "#{dungeon.name} (敵の強さ: #{dungeon.enemy_total_power_range})", from: 'ダンジョン'
         select '25分', from: '冒険時間'
 
         # submitボタン取得が不安定なため requestSubmit() を使用
@@ -29,7 +29,7 @@ RSpec.describe 'Adventures', type: :system do
     context 'パーティが空' do
       it '冒険の作成に失敗する' do
         visit new_adventure_path
-        select "#{dungeon.name} (敵の強さ: #{dungeon.enemy_power})", from: 'ダンジョン'
+        select "#{dungeon.name} (敵の強さ: #{dungeon.enemy_total_power_range})", from: 'ダンジョン'
         select '25分', from: '冒険時間'
 
         page.execute_script("document.getElementById('adventure-form').requestSubmit()")

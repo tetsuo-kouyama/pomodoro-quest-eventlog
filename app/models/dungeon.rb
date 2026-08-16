@@ -23,8 +23,9 @@ class Dungeon < ApplicationRecord
   validate :event_weights_must_have_positive_total
   validate :cannot_be_own_prerequisite
 
-  def enemy_power
-    difficulty * 50
+  def enemy_total_power_range
+    powers = dungeon_enemies.map(&:enemy_total_power)
+    "#{powers.min}〜#{powers.max}"
   end
 
   private
