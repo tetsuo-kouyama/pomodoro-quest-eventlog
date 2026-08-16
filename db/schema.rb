@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_143911) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_154814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,8 +77,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143911) do
     t.integer "difficulty", null: false
     t.integer "heal_weight", default: 20, null: false
     t.string "name", null: false
+    t.bigint "prerequisite_dungeon_id"
     t.integer "treasure_weight", default: 20, null: false
     t.datetime "updated_at", null: false
+    t.index ["prerequisite_dungeon_id"], name: "index_dungeons_on_prerequisite_dungeon_id"
   end
 
   create_table "monsters", force: :cascade do |t|
@@ -122,6 +124,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143911) do
   add_foreign_key "adventures", "users"
   add_foreign_key "dungeon_enemies", "dungeons"
   add_foreign_key "dungeon_enemies", "monsters"
+  add_foreign_key "dungeons", "dungeons", column: "prerequisite_dungeon_id"
   add_foreign_key "owned_monsters", "monsters"
   add_foreign_key "owned_monsters", "users"
 end

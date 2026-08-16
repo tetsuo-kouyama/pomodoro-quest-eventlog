@@ -37,4 +37,19 @@ class User < ApplicationRecord
     @incomplete_adventure =
       adventures.incomplete.order(start_at: :desc).first
   end
+
+  # 「このダンジョンが開放済みか？」
+  def dungeon_unlocked?(dungeon)
+    prerequisite_id = dungeon.prerequisite_dungeon_id
+    return true if prerequisite_id.nil?
+
+    victory_dungeon_ids.include?(prerequisite_id)
+  end
+
+  private
+
+  # クリア済みのダンジョンを一括取得する
+  def victory_dungeon_ids
+    @victory_dungeon_ids ||= adventures.where(status: :victory).pluck(:dungeon_id).to_set
+  end
 end
