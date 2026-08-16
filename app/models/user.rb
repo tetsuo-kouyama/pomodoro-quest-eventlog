@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   def hire_monster!(owned_monster, monster)
     raise InsufficientGoldError unless can_hire?(monster)
+    raise MonsterLockedError unless monster_unlocked?(monster)
 
     transaction do
       decrement!(:gold, monster.hire_cost)
@@ -44,6 +45,14 @@ class User < ApplicationRecord
     return true if prerequisite_id.nil?
 
     victory_dungeon_ids.include?(prerequisite_id)
+  end
+
+  # 「このモンスターが解放されているか？」
+  def monster_unlocked?(monster)
+    unlock_dungeon_id = monster.unlock_dungeon_id
+    return true if unlock_dungeon_id.nil?
+
+    victory_dungeon_ids.include?(unlock_dungeon_id)
   end
 
   private

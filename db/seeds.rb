@@ -6,6 +6,7 @@ monsters = [
   {
     id: 1,
     name: 'スライム',
+    unlock_dungeon_id: nil,
     base_hp: 10,
     base_atk: 3,
     base_def: 1,
@@ -15,6 +16,7 @@ monsters = [
   {
     id: 2,
     name: 'ゴブリン',
+    unlock_dungeon_id: 2,
     base_hp: 25,
     base_atk: 7,
     base_def: 3,

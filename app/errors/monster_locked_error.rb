@@ -1,0 +1,1 @@
+class MonsterLockedError < StandardError; end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_154814) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_16_080142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -91,7 +91,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_154814) do
     t.datetime "created_at", null: false
     t.integer "hire_cost", null: false
     t.string "name", null: false
+    t.bigint "unlock_dungeon_id"
     t.datetime "updated_at", null: false
+    t.index ["unlock_dungeon_id"], name: "index_monsters_on_unlock_dungeon_id"
   end
 
   create_table "owned_monsters", force: :cascade do |t|
@@ -125,6 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_154814) do
   add_foreign_key "dungeon_enemies", "dungeons"
   add_foreign_key "dungeon_enemies", "monsters"
   add_foreign_key "dungeons", "dungeons", column: "prerequisite_dungeon_id"
+  add_foreign_key "monsters", "dungeons", column: "unlock_dungeon_id"
   add_foreign_key "owned_monsters", "monsters"
   add_foreign_key "owned_monsters", "users"
 end

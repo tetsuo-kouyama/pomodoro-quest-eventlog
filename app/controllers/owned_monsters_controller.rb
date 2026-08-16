@@ -10,7 +10,9 @@ class OwnedMonstersController < ApplicationController
 
   def new
     @owned_monster = OwnedMonster.new
-    @monsters = Monster.all
+
+    # 解放済みのモンスターを取得
+    set_unlocked_monsters
   end
 
   def create
@@ -21,6 +23,8 @@ class OwnedMonstersController < ApplicationController
 
     redirect_to owned_monsters_path, notice: "#{@owned_monster.nickname}を雇用しました！"
 
+  rescue MonsterLockedError
+    reload_form_on_failure("このモンスターはまだ解放されていません")
   rescue InsufficientGoldError
     reload_form_on_failure("ゴールドが足りません(必要: #{@monster.hire_cost}G / 所持: #{current_user.gold}G)")
   rescue ActiveRecord::RecordInvalid
@@ -59,12 +63,17 @@ class OwnedMonstersController < ApplicationController
 
   def reload_form_on_failure(message = nil)
     flash.now[:alert] = message if message
-    @monsters = Monster.all
+    set_unlocked_monsters
     render :new, status: :unprocessable_entity
   end
 
   def set_owned_monster
     @owned_monster = current_user.owned_monsters.find(params[:id])
+  end
+
+  # 解放済みモンスターを取得する
+  def set_unlocked_monsters
+    @monsters = Monster.select { |monster| current_user.monster_unlocked?(monster) }
   end
 
   def ensure_not_locked

@@ -56,7 +56,54 @@ RSpec.describe 'OwnedMonsters', type: :request do
         end.not_to change(OwnedMonster, :count)
 
         expect(user.reload.gold).to eq(50)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context "解放条件のダンジョンをクリア済みの場合" do
+      let(:dungeon) { create(:dungeon) }
+      let(:monster) { create(:monster, unlock_dungeon: dungeon, hire_cost: 100) }
+      let!(:victory_adventure) { create(:adventure, :victory, user: user, dungeon: dungeon) }
+
+      before do
+        user.update!(gold: 1000)
+      end
+
+      it "雇用できる" do
+        expect do
+          post owned_monsters_path,
+             params: {
+               owned_monster: {
+                 monster_id: monster.id,
+                 nickname: "ゴブリン"
+               }
+             }
+        end.to change(user.owned_monsters, :count).by(1)
+        expect(response).to redirect_to(owned_monsters_path)
+      end
+    end
+
+    context "解放条件のダンジョンをクリアしていない場合" do
+      let(:dungeon) { create(:dungeon) }
+      let(:monster) { create(:monster, unlock_dungeon: dungeon, hire_cost: 100) }
+      let!(:victory_adventure) { create(:adventure, :wiped_out, user: user, dungeon: dungeon) }
+
+      before do
+        user.update!(gold: 1000)
+      end
+
+      it "雇用できない" do
+        expect do
+          post owned_monsters_path,
+             params: {
+               owned_monster: {
+                 monster_id: monster.id,
+                 nickname: "ゴブリン"
+               }
+             }
+        end.not_to change(user.owned_monsters, :count)
+
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

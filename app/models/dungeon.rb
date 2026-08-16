@@ -3,6 +3,8 @@ class Dungeon < ApplicationRecord
   has_many :users, through: :adventures
   has_many :dungeon_enemies, dependent: :destroy
   has_many :monsters, through: :dungeon_enemies
+  # このダンジョンをクリアすると解放されるモンスター
+  has_many :unlocked_monsters, class_name: "Monster", foreign_key: "unlock_dungeon_id", dependent: :nullify
 
   # 前提ダンジョン
   belongs_to :prerequisite_dungeon,
