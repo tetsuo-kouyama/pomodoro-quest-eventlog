@@ -39,7 +39,7 @@ class OwnedMonster < ApplicationRecord
   end
 
   def total_power
-    hp + defense + attack
+    hp + defense + attack + speed
   end
 
   def increment_level!(user)
