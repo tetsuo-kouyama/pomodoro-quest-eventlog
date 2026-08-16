@@ -9,7 +9,7 @@ class Dungeon < ApplicationRecord
              class_name: "Dungeon",
              optional: true
 
-  # ダンジョンをクリアすると開放される次のダンジョン
+  # ダンジョンをクリアすると解放される次のダンジョン
   has_many :next_dungeons,
            class_name: "Dungeon",
            foreign_key: "prerequisite_dungeon_id",

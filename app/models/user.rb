@@ -38,7 +38,7 @@ class User < ApplicationRecord
       adventures.incomplete.order(start_at: :desc).first
   end
 
-  # 「このダンジョンが開放済みか？」
+  # 「このダンジョンが解放済みか？」
   def dungeon_unlocked?(dungeon)
     prerequisite_id = dungeon.prerequisite_dungeon_id
     return true if prerequisite_id.nil?

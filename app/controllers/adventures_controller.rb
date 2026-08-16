@@ -12,7 +12,7 @@ class AdventuresController < ApplicationController
     @adventure = Adventure.new
     @active_monsters = current_user.owned_monsters.active.order(:party_position)
 
-    # 開放済みのダンジョンを取得
+    # 解放済みのダンジョンを取得
     @dungeons = Dungeon.order(:difficulty).select { |dungeon| current_user.dungeon_unlocked?(dungeon) }
   end
 
