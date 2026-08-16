@@ -2,15 +2,26 @@
 
 <%= render "shared/upper_navigation" %>
 
-<div class="max-w-md mx-auto p-5 space-y-6">
-  <div class="flex justify-between items-center">
-    <h2 class="text-base font-black text-slate-800">パーティ編成</h2>
-    <%= link_to "← 戻る", new_adventure_path, class: "text-xs font-bold text-slate-500 hover:underline" %>
+<% if @active_monsters.empty? && @inactive_monsters.empty? %>
+  <div class="text-center py-8">
+    <p class="text-sm font-bold text-slate-500">
+      モンスターがいません
+    </p>
+    <p class="text-xs text-slate-400 mt-1">
+      モンスターを雇用してパーティを編成しましょう
+    </p>
   </div>
-    <%= render "parties/active_monsters", active_monsters: @active_monsters %>
+<% else %>
+  <div class="max-w-md mx-auto p-5 space-y-6">
+    <div class="flex justify-between items-center">
+      <h2 class="text-base font-black text-slate-800">パーティ編成</h2>
+      <%= link_to "← 戻る", new_adventure_path, class: "text-xs font-bold text-slate-500 hover:underline" %>
+    </div>
+      <%= render "parties/active_monsters", active_monsters: @active_monsters %>
 
-  <div class="space-y-3">
-    <h3 class="text-xs font-black text-slate-400">キャラクター一覧</h3>
-    <%= render "parties/inactive_monsters", inactive_monsters: @inactive_monsters %>
+    <div class="space-y-3">
+      <h3 class="text-xs font-black text-slate-400">モンスター一覧</h3>
+      <%= render "parties/inactive_monsters", inactive_monsters: @inactive_monsters %>
+    </div>
   </div>
-</div>
+<% end %>
