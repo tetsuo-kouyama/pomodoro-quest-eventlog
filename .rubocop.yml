@@ -51,3 +51,7 @@ RSpec/LetSetup:
 
 Style/Documentation:
   Enabled: false
+
+# デフォルトの5から8に緩和
+RSpec/MultipleMemoizedHelpers:
+  Max: 8

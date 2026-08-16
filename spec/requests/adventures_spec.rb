@@ -58,7 +58,8 @@ RSpec.describe 'Adventures', type: :request do
             }
         end.not_to change(Adventure, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to redirect_to(new_adventure_path)
+        expect(flash[:alert]).to eq("このダンジョンは存在しないか、まだ解放されていません")
       end
 
       it '冒険時間が空の時に失敗する' do
@@ -72,7 +73,7 @@ RSpec.describe 'Adventures', type: :request do
             }
         end.not_to change(Adventure, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -92,6 +93,59 @@ RSpec.describe 'Adventures', type: :request do
 
         expect(response).to redirect_to(adventure_path(adventure))
         expect(flash[:alert]).to eq("進行中または報酬を受け取っていない冒険があります")
+      end
+    end
+
+    context '解放済みダンジョンの場合' do
+      let(:prerequisite_dungeon) { create(:dungeon, name: "スライムの洞窟", difficulty: 1) }
+      let(:unlocked_dungeon) { create(:dungeon, name: "ゴブリンの森", difficulty: 2, prerequisite_dungeon: prerequisite_dungeon) }
+
+      before do
+        create(:adventure, :victory, :reward_claimed, user: user, dungeon: prerequisite_dungeon)
+        create_list(:owned_monster, 5, :party_member, user: user, monster: monster)
+      end
+
+      it "冒険を作成できる" do
+        expect do
+          post adventures_path,
+            params: {
+              adventure: {
+                dungeon_id: unlocked_dungeon.id,
+                required_time: required_time
+              }
+            }
+        end.to change(Adventure, :count).by(1)
+
+        adventure = Adventure.last
+
+        expect(adventure.user).to eq(user)
+        expect(adventure.dungeon).to eq(unlocked_dungeon)
+        expect(response).to redirect_to(adventure_path(adventure))
+      end
+    end
+
+    context '解放済みでないダンジョンの場合' do
+      let(:prerequisite_dungeon) { create(:dungeon, name: "スライムの洞窟", difficulty: 1) }
+      let(:locked_dungeon) { create(:dungeon, name: "ゴブリンの森", difficulty: 2, prerequisite_dungeon: prerequisite_dungeon) }
+
+      before do
+        create(:adventure, :wiped_out, :reward_claimed, user: user, dungeon: prerequisite_dungeon)
+        create_list(:owned_monster, 5, :party_member, user: user, monster: monster)
+      end
+
+      it "冒険を作成できない" do
+        expect do
+          post adventures_path,
+            params: {
+              adventure: {
+                dungeon_id: locked_dungeon.id,
+                required_time: required_time
+              }
+            }
+        end.not_to change(Adventure, :count)
+
+        expect(flash[:alert]).to eq("このダンジョンは存在しないか、まだ解放されていません")
+        expect(response).to redirect_to(new_adventure_path)
       end
     end
   end

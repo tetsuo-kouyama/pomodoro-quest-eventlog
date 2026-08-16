@@ -6,7 +6,7 @@ dungeons_data = [
   {
     name: 'スライムの洞窟',
     difficulty: 1,
-    prerequisite_name: nil, # 前提ダンジョンなし
+    prerequisite_name: nil, 
     battle_weight: 6, heal_weight: 2, treasure_weight: 2
   },
   {
@@ -18,14 +18,12 @@ dungeons_data = [
 ]
 
 dungeons_data.each do |data|
-  # 前提ダンジョンの名前が指定されている場合、名前からオブジェクトを取得
-  prerequisite = Dungeon.find_by(name: data[:prerequisite_name]) if data[:prerequisite_name]
+  prerequisite = Dungeon.find_by!(name: data[:prerequisite_name]) if data[:prerequisite_name]
 
-  # name をキーにしてデータを取得または作成
   dungeon = Dungeon.find_or_initialize_by(name: data[:name])
   dungeon.update!(
     difficulty: data[:difficulty],
-    prerequisite_dungeon: prerequisite, # IDの数値ではなくオブジェクトをセット
+    prerequisite_dungeon: prerequisite,
     battle_weight: data[:battle_weight],
     heal_weight: data[:heal_weight],
     treasure_weight: data[:treasure_weight]
@@ -45,18 +43,17 @@ monsters_data = [
   },
   {
     name: 'ゴブリン',
-    unlock_dungeon_name: 'ゴブリンの森', # 名前で参照！
+    unlock_dungeon_name: 'ゴブリンの森',
     base_hp: 25, base_atk: 7, base_def: 3, base_speed: 3, hire_cost: 100
   }
 ]
 
 monsters_data.each do |data|
-  # 解放ダンジョンの名前からオブジェクトを取得
-  unlock_dungeon = Dungeon.find_by(name: data[:unlock_dungeon_name]) if data[:unlock_dungeon_name]
+  unlock_dungeon = Dungeon.find_by!(name: data[:unlock_dungeon_name]) if data[:unlock_dungeon_name]
 
   monster = Monster.find_or_initialize_by(name: data[:name])
   monster.update!(
-    unlock_dungeon: unlock_dungeon, # IDの数値ではなくオブジェクトをセット
+    unlock_dungeon: unlock_dungeon,
     base_hp: data[:base_hp],
     base_atk: data[:base_atk],
     base_def: data[:base_def],

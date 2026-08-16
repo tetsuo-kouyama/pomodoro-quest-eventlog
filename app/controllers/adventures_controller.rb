@@ -13,7 +13,7 @@ class AdventuresController < ApplicationController
     @active_monsters = current_user.owned_monsters.active.order(:party_position)
 
     # 解放済みのダンジョンを取得
-    @dungeons = Dungeon.order(:difficulty).select { |dungeon| current_user.dungeon_unlocked?(dungeon) }
+    set_unlocked_dungeons
   end
 
   def create
@@ -21,6 +21,13 @@ class AdventuresController < ApplicationController
 
     if active_monsters.empty?
       redirect_to new_adventure_path, alert: "パーティを編成してください"
+      return
+    end
+
+    # ダンジョンの解放判定
+    dungeon = Dungeon.find_by(id: adventure_params[:dungeon_id])
+    if dungeon.nil? || !current_user.dungeon_unlocked?(dungeon)
+      redirect_to new_adventure_path, alert: "このダンジョンは存在しないか、まだ解放されていません"
       return
     end
 
@@ -35,7 +42,7 @@ class AdventuresController < ApplicationController
       redirect_to @adventure, notice: "冒険に出発しました!"
     else
       @active_monsters = active_monsters
-      @dungeons = Dungeon.order(:difficulty)
+      set_unlocked_dungeons
       render :new, status: :unprocessable_entity
     end
   end
@@ -103,6 +110,11 @@ class AdventuresController < ApplicationController
   # 冒険を取得する
   def set_adventure
     @adventure = current_user.adventures.find(params[:id])
+  end
+
+  # 解放済みのダンジョンを取得する
+  def set_unlocked_dungeons
+    @dungeons = Dungeon.order(:difficulty).select { |dungeon| current_user.dungeon_unlocked?(dungeon) }
   end
 
   # 現在時刻までのイベントを生成し、冒険の最新状態を取得する
