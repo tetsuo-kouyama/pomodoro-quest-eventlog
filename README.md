@@ -34,6 +34,7 @@ https://pomodoro-quest-eventlog.onrender.com
 
 ### 特に見てほしいポイント
 #### パーティ編成画面
+![パーティ編成画面](images/パーティ編成画面.gif)
 
 ---
 
