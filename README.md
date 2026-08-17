@@ -36,6 +36,9 @@ https://pomodoro-quest-eventlog.onrender.com
 #### パーティ編成画面
 ![パーティ編成画面](images/パーティ編成画面.gif)
 
+#### 1分ごとにイベントを表示させる
+![イベント](images/イベントのリアルタイム更新.gif)
+
 ---
 
 ## 使用技術
