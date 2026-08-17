@@ -1,6 +1,6 @@
 # ポモクエ
 ## 公開URL
-https://pomodoro-quest.onrender.com
+https://pomodoro-quest-eventlog.onrender.com
 
 ## アプリを作った理由
 
@@ -130,7 +130,7 @@ https://pomodoro-quest.onrender.com
 ![画面遷移図](images/放置RPG-画面遷移図.png)
 
 ## ER図
-![ER図](images/放置RPG-ER図.png)
+![ER図](images/ポモクエER図.png)
 
 ## 開発スケジュール
 ### day1: 基礎構築(8時間)
