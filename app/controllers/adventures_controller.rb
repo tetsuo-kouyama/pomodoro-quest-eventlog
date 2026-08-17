@@ -81,6 +81,7 @@ class AdventuresController < ApplicationController
     redirect_to @adventure, alert: "エラーが発生しました"
   end
 
+  # 5秒ごとに呼ぶ
   def events
     last_id = params[:last_event_id].to_i
 

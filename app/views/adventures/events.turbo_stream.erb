@@ -5,3 +5,11 @@
         locals: { event: event } 
       ) %>
 <% end %>
+
+<% unless @adventure.ongoing? %>
+  <%= turbo_stream.replace(
+    "adventure_status",
+    partial: "adventures/result",
+    locals: { adventure: @adventure }
+  ) %>
+<% end %>
