@@ -34,10 +34,10 @@ https://pomodoro-quest-eventlog.onrender.com
 
 ### 特に見てほしいポイント
 #### パーティ編成画面
-![パーティ編成画面](images/パーティ編成画面.gif)
+![パーティ編成画面](images/party-edit.gif)
 
 #### 1分ごとにイベントを追加する
-![イベント](images/イベントのリアルタイム更新.gif)
+![イベント](images/realtime-update.gif)
 
 ---
 
@@ -69,4 +69,4 @@ https://pomodoro-quest-eventlog.onrender.com
 ![画面遷移図](images/放置RPG-画面遷移図.png)
 
 ## ER図
-![ER図](images/ポモクエER図.png)
+![ER図](images/er-diagram.png)
