@@ -111,6 +111,8 @@ class AdventuresController < ApplicationController
   # 冒険を取得する
   def set_adventure
     @adventure = current_user.adventures.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to adventures_path, alert: "指定された冒険は見つかりませんでした"
   end
 
   # 解放済みのダンジョンを取得する
