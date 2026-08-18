@@ -1,4 +1,15 @@
-<%= button_to "報酬を受け取る！", 
-    claim_adventure_path(adventure),
-    method: :patch, 
-    class: "w-full py-3 bg-amber-400 text-slate-800 rounded-xl border-2 border-slate-800 font-black shadow-md" %>
+<div class="flex flex-col gap-4">
+  <% if adventure.victory? %>
+    <h2 class="text-lg text-amber-800">
+      ダンジョン踏破！
+    </h2>
+  <% elsif adventure.wiped_out? %>
+    <h2 class="text-lg text-rose-800">
+      全滅しました...
+    </h2>
+  <% end %>
+  <%= button_to "報酬を受け取る！", 
+      claim_adventure_path(adventure),
+      method: :patch, 
+      class: "w-full py-3 bg-amber-400 text-slate-800 rounded-xl border-2 border-slate-800 font-black shadow-md" %>
+</div>

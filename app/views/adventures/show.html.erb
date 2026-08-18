@@ -4,11 +4,8 @@
 
 <div class="p-5 space-y-6">
   <div class="bg-white p-5 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0_rgba(15,23,42,1)] text-center font-black text-slate-800 space-y-4">
-    <h2 class="text-lg text-fuchsia-500">
-      <%= @adventure.ongoing? ? "冒険進行中" : "帰還完了" %>
-    </h2>
     
-    <p class="text-sm">ダンジョン: <%= @dungeon.name %></p>
+    <p class="text-slate-800">ダンジョン: <%= @dungeon.name %></p>
     
     <div id="adventure_status">
 	    <% if @adventure.ongoing? %>

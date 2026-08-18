@@ -1,3 +1,4 @@
+<%# 新しいイベントがあれば adventure_events_list に追加 %>
 <% @new_events.each do |event| %>
   <%= turbo_stream.prepend(
         "adventure_events_list",
@@ -6,6 +7,7 @@
       ) %>
 <% end %>
 
+<%# 冒険が終了していたら result に置換 %>
 <% unless @adventure.ongoing? %>
   <%= turbo_stream.replace(
     "adventure_status",
